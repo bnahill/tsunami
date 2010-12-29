@@ -1,0 +1,14 @@
+*~
+*.out
+*.log
+*.aux
+*.swp
+*#
+*gz
+*.cf
+*.vcd.*
+*.vcd
+*.pyc
+*.o
+*.cof
+*.dat

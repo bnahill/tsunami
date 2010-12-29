@@ -1,0 +1,19 @@
+This project attempts to create a simple waveform generator using the
+Analog Devices AD9835 numerically controller oscillator with a dsPIC30F4011
+digital signal controller. This project is also built heavily upon the dsPIC
+port of FreeRTOS and includes relevant portions of it.
+
+To build:
+Modify executable paths in Makefile and run 'make' to generate the hex file.
+
+This is intended to be built using the GNU make utility with the MPLAB C30
+compiler. To use the MPLAB IDE, you will have to make an MPLAB project of this.
+Several of the files from the dsPIC FreeRTOS demo have been modified to work
+for the dsPIC30F as opposed to the dsPIC33F and this should be noted if you 
+attempt to build up from the FreeRTOS project.
+
+Questions?:
+Email Ben at bnahill@gmail.com
+
+This software is free.
+
