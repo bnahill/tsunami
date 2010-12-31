@@ -19,7 +19,7 @@
 #
 
 # The name of the file you want to output
-TARGET=rtos.hex
+TARGET=tsunami.hex
 COF=$(patsubst %.hex, %.cof, $(TARGET))
 # Part number
 PART=30f4011
@@ -131,7 +131,7 @@ $(PORT_DIR)/portasm_dsPIC.o: $(PORT_DIR)/portasm_dsPIC.s
 	$(GCC) -c $(INCLUDEPATH) -mcpu=$(PART) $(CFLAGS) -o $@ $<
 
 $(COF): $(OBJS)
-	$(GCC) $(LIBPATH) $(LIBS) -Xlinker -T$(LINKERSCRIPT) -O2 -o $@ -Xlinker --heap=256$^
+	$(GCC) $(LIBPATH) $(LIBS) -Xlinker -T$(LINKERSCRIPT) -O2 -o $@ -Xlinker --heap=256 $^
 #	$(GCC) -Xlinker $(LIBPATH) -Xlinker $(LIBS) -Xlinker -T$(LINKERSCRIPT) -o $@ -Xlinker -Map=$(patsubst %.hex, %.map, $(TARGET)) $^
 
 $(TARGET): $(COF)
