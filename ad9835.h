@@ -21,6 +21,11 @@
 #ifndef __AD9535_H_
 #define __AD9535_H_
 
+/*
+ * The following are not provided since C30 doesn't include stdint.h.
+ * If it turns out that other components may need this, a new header should
+ * be created to provide this in common.
+ */
 typedef unsigned int uint16_t; 
 typedef unsigned char uint8_t; 
 typedef unsigned long uint32_t;

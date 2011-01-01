@@ -103,13 +103,6 @@ int main( void )
 	prvSetupHardware();
 
 	ad9835_init();
-	//xTaskCreate( vSPITask, ( signed char * ) "SPI", SPI_TASK_STACK_SIZE, NULL, SPI_TASK_PRIORITY, NULL ); 
-	/* Create the standard demo tasks. */
-	//vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );	
-	//vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	//vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
-	//vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	//vCreateBlockTimeTasks();
 
 	/* Create the test tasks defined within this file. */
 	xTaskCreate( vBoringTask, ( signed char * ) "Boring", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -129,6 +122,7 @@ int main( void )
 
 
 static void prvSetupHardware( void ){
+	// Set TRISB0 as output
 	TRISB &= ~0x0001;
 }
 /*-----------------------------------------------------------*/

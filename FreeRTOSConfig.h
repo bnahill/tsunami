@@ -70,11 +70,18 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
+/*
+ * The following have been modified to better suit the dsPIC30F family which 
+ * has less RAM (necessitating a smaller heap) and a maximum instruction clock
+ * of 30MHz.
+ *
+ */
+
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configCPU_CLOCK_HZ				( ( unsigned long ) 30000000 )  /* Fosc / 2 */
+#define configCPU_CLOCK_HZ				( ( unsigned long ) 30000000 )  /* Fosc / 4 */
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
 #define configMINIMAL_STACK_SIZE		( 105 )
 //#define configTOTAL_HEAP_SIZE			( ( size_t ) 5120 )

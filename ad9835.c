@@ -18,29 +18,34 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-/* Standard includes. */
-#include <stdio.h>
+/*
+ * This file provides basic functionality to interact with the AD9835
+ * waveform generator using the dsPIC30F SPI module in conjunction with
+ * FreeRTOS.
+ */
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-#include "croutine.h"
 #include "semphr.h"
 #include "ad9835.h"
 
-// Prototypes
+// Static prototypes
 static void vSPIInit( void );
 static void vSPITask( void *pbParameters );
 
+// Write the current value as well as a deferred value
 #define AD_F_WRITE    (0b10 << 12)
+// Write to the defer register
 #define AD_F_DEFER    (0b11 << 12)
+// MSB H,L; LSB H,L
 #define AD_F_ADDR_MH  (0b11 << 8)
 #define AD_F_ADDR_ML  (0b10 << 8)
 #define AD_F_ADDR_LH  (0b01 << 8)
 #define AD_F_ADDR_LL  (0b00 << 8)
 
-// Macros
+// Constants
 #define SPI_QUEUE_LEN         20
 #define SPI_TASK_STACK_SIZE   ( configMINIMAL_STACK_SIZE + 128 )
 #define SPI_TASK_PRIORITY     ( tskIDLE_PRIORITY + 3 )
@@ -50,15 +55,27 @@ static xQueueHandle xSPIQueue;
 static xSemaphoreHandle xSPISemaphore;
 
 /*
- * ad9835_init (void)
+ * void ad9835_init (void)
  *
- * Initialize SPI and start its task
+ * Initialize SPI, a queue for SPI words, and a semaphore
+ * for the SPI resource. Start its task too.
  */
 void ad9835_init( void ){
+	xSPIQueue = xQueueCreate(SPI_QUEUE_LEN, sizeof(uint16_t));
+	vSemaphoreCreateBinary( xSPISemaphore );
+
 	vSPIInit();
+
+	// Provide the initial resource
+	xSemaphoreGive( xSPISemaphore );
 	xTaskCreate( vSPITask, ( signed char * ) "SPI", SPI_TASK_STACK_SIZE, NULL, SPI_TASK_PRIORITY, NULL );
 }
 
+/*
+ * void vSPIInit (void)
+ *
+ * Initialize the SPI module
+ */
 static void vSPIInit( void ){
 	SPI1STAT = 0;
 	//FRMEN = 1
@@ -72,11 +89,6 @@ static void vSPIInit( void ){
 	//PPRE = 10 (4)
 	SPI1CON =  0b0100010101111010;
 	IFS0bits.SPI1IF = 0;
-
-	xSPIQueue = xQueueCreate(10, sizeof(uint16_t));
-	vSemaphoreCreateBinary( xSPISemaphore );
-	// Provide the initial resource
-	xSemaphoreGive( xSPISemaphore );
 }
 
 /* 
